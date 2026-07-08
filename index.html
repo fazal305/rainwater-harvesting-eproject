@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rainwater Harvesting eProject</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
 
     <!-- Navigation Bar -->
@@ -72,11 +74,7 @@
                 </div>
 
                 <div class="image-box">
-                    <div class="water-illustration">
-                        <span>☔</span>
-                        <h3>Collect</h3>
-                        <p>Store rainwater for future use</p>
-                    </div>
+                    <img src="images/rooftop-harvesting.jpg" alt="Rooftop rainwater harvesting system">
                 </div>
             </div>
         </div>
@@ -96,13 +94,23 @@
                     <h3>Residential Rainwater Harvesting</h3>
                     <p>
                         Residential systems collect rainwater from rooftops and store it in home tanks
-                        for later use.
+                        for later use in gardens, cleaning, and other household needs.
                     </p>
+
+                    <h4>Products Available</h4>
                     <ul>
-                        <li>Rooftop collection systems</li>
-                        <li>Home storage tanks</li>
-                        <li>Garden irrigation use</li>
-                        <li>Household water cost savings</li>
+                        <li>Rain barrels for small homes</li>
+                        <li>Plastic or concrete storage tanks</li>
+                        <li>Leaf screens and first-flush diverters</li>
+                        <li>Downspout connectors and filters</li>
+                    </ul>
+
+                    <h4>Techniques and Methods</h4>
+                    <ul>
+                        <li>Rooftop collection through gutters</li>
+                        <li>Basic filtration before storage</li>
+                        <li>Garden irrigation using stored water</li>
+                        <li>Household water cost reduction</li>
                     </ul>
                 </article>
 
@@ -113,13 +121,45 @@
                         Commercial systems are used in offices, industries, malls, and large buildings
                         to manage water on a bigger scale.
                     </p>
+
+                    <h4>Products Available</h4>
                     <ul>
-                        <li>Large rooftop collection systems</li>
-                        <li>Industrial storage tanks</li>
-                        <li>Building water management</li>
+                        <li>Industrial water storage tanks</li>
+                        <li>Underground reservoirs</li>
+                        <li>Large filtration units</li>
+                        <li>Smart water level monitoring sensors</li>
+                    </ul>
+
+                    <h4>Techniques and Methods</h4>
+                    <ul>
+                        <li>Large rooftop water collection</li>
+                        <li>Building drainage connection systems</li>
+                        <li>Tank-based water management</li>
                         <li>Sustainability and compliance support</li>
                     </ul>
                 </article>
+            </div>
+
+            <div class="image-gallery">
+                <div class="gallery-card">
+                    <img src="images/rain-barrel.jpg" alt="Rain barrel for residential use">
+                    <h3>Rain Barrel</h3>
+                </div>
+
+                <div class="gallery-card">
+                    <img src="images/storage-tank.jpg" alt="Water storage tank">
+                    <h3>Storage Tank</h3>
+                </div>
+
+                <div class="gallery-card">
+                    <img src="images/filter-system.jpg" alt="Rainwater filter system">
+                    <h3>Filter System</h3>
+                </div>
+
+                <div class="gallery-card">
+                    <img src="images/commercial-tank.jpg" alt="Commercial rainwater harvesting tank">
+                    <h3>Commercial Tank</h3>
+                </div>
             </div>
         </div>
     </section>
@@ -312,6 +352,18 @@
                     </ul>
                 </article>
             </div>
+
+            <div class="wide-image-card">
+                <img src="images/garden-irrigation.jpg" alt="Garden irrigation using harvested rainwater">
+                <div>
+                    <h3>Effective Use Example</h3>
+                    <p>
+                        Harvested rainwater can be used for watering plants, cleaning outdoor areas,
+                        washing vehicles, and flushing toilets. For drinking, it should always be filtered,
+                        disinfected, and tested properly.
+                    </p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -423,7 +475,7 @@
                             <small class="error-message" id="messageError"></small>
                         </div>
 
-                        <button type="submit" class="btn primary-btn">Submit Message</button>
+                        <button type="submit" class="btn primary-btn form-btn">Submit Message</button>
                     </form>
 
                     <div class="success-message" id="successMessage">
@@ -433,12 +485,18 @@
 
                 <div class="map-box">
                     <h3>Our Location</h3>
-                    <p>Location shown using Google Maps iframe embed.</p>
+                    <p>This section uses the browser Geolocation API and a Google Maps iframe.</p>
 
-                    <iframe
-                        title="Our Location Map"
-                        src="https://www.google.com/maps?q=Aptech%20Learning%20Karachi&output=embed"
-                        loading="lazy">
+                    <button class="btn location-btn" id="locationBtn" type="button">
+                        Show My Current Location
+                    </button>
+
+                    <div class="location-result" id="locationResult">
+                        Click the button to detect your latitude and longitude.
+                    </div>
+
+                    <iframe title="Our Location Map"
+                        src="https://www.google.com/maps?q=Aptech%20Learning%20Karachi&output=embed" loading="lazy">
                     </iframe>
                 </div>
             </div>
@@ -463,4 +521,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

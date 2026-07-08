@@ -11,93 +11,67 @@ const locationResult = document.getElementById("locationResult");
 
 let countersStarted = false;
 
+/* Smooth scroll for navigation links */
 function smoothScroll() {
     navLinks.forEach(function (link) {
         link.addEventListener("click", function (event) {
             const targetId = link.getAttribute("href");
 
-            if (!targetId || !targetId.startsWith("#")) {
-                return;
+            if (targetId && targetId.startsWith("#")) {
+                event.preventDefault();
+
+                const targetSection = document.querySelector(targetId);
+
+                if (targetSection) {
+                    targetSection.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start"
+                    });
+                }
+
+                navMenu.classList.remove("show");
             }
-
-            const targetSection = document.querySelector(targetId);
-
-            if (!targetSection) {
-                return;
-            }
-
-            event.preventDefault();
-
-            targetSection.scrollIntoView({
-                behavior: "smooth",
-                block: "start"
-            });
-
-            closeMobileMenu();
         });
     });
 }
 
+/* Toggle mobile navigation menu */
 function toggleHamburger() {
-    if (!hamburger || !navMenu) {
-        return;
-    }
-
-    hamburger.setAttribute("aria-expanded", "false");
-
     hamburger.addEventListener("click", function () {
-        const menuIsOpen = navMenu.classList.toggle("show");
-        hamburger.setAttribute("aria-expanded", String(menuIsOpen));
-    });
-
-    document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-            closeMobileMenu();
-        }
+        navMenu.classList.toggle("show");
     });
 }
 
-function closeMobileMenu() {
-    if (!hamburger || !navMenu) {
-        return;
-    }
-
-    navMenu.classList.remove("show");
-    hamburger.setAttribute("aria-expanded", "false");
-}
-
+/* Set up tab button click events */
 function initTabs() {
     tabButtons.forEach(function (button) {
-        const selectedTab = button.getAttribute("data-tab");
-        const relatedContent = document.getElementById(selectedTab);
-
-        button.setAttribute("type", "button");
-        button.setAttribute("aria-controls", selectedTab);
-        button.setAttribute("aria-selected", button.classList.contains("active") ? "true" : "false");
-
-        if (relatedContent) {
-            relatedContent.setAttribute("role", "tabpanel");
-        }
-
         button.addEventListener("click", function () {
+            const selectedTab = button.getAttribute("data-tab");
             showTab(selectedTab);
         });
     });
 }
 
+/* Show selected tab and hide other tabs */
 function showTab(tabId) {
     tabButtons.forEach(function (button) {
-        const isActive = button.getAttribute("data-tab") === tabId;
+        button.classList.remove("active");
 
-        button.classList.toggle("active", isActive);
-        button.setAttribute("aria-selected", String(isActive));
+        if (button.getAttribute("data-tab") === tabId) {
+            button.classList.add("active");
+        }
     });
 
     tabContents.forEach(function (content) {
-        content.classList.toggle("active", content.id === tabId);
+        content.classList.remove("active");
+
+        if (content.id === tabId) {
+            content.classList.add("active");
+        }
     });
 }
 
+/* Start counters when statistics section is visible */
 function initCounters() {
     const statisticsSection = document.getElementById("statistics");
 
@@ -111,7 +85,6 @@ function initCounters() {
                 if (entry.isIntersecting && countersStarted === false) {
                     startCounters();
                     countersStarted = true;
-                    observer.unobserve(statisticsSection);
                 }
             });
         }, {
@@ -119,43 +92,40 @@ function initCounters() {
         });
 
         observer.observe(statisticsSection);
-        return;
+    } else {
+        startCounters();
+        countersStarted = true;
     }
-
-    startCounters();
-    countersStarted = true;
 }
 
+/* Start all animated counters */
 function startCounters() {
     counters.forEach(function (counter) {
         const target = Number(counter.getAttribute("data-target"));
-
-        if (Number.isFinite(target)) {
-            animateCounter(counter, target, 1600);
-        }
+        animateCounter(counter, target, 1600);
     });
 }
 
+/* Animate number from 0 to target */
 function animateCounter(element, target, duration) {
-    const startTime = performance.now();
+    let currentValue = 0;
+    const intervalTime = 20;
+    const totalSteps = duration / intervalTime;
+    const increment = target / totalSteps;
 
-    function updateCounter(currentTime) {
-        const elapsedTime = currentTime - startTime;
-        const progress = Math.min(elapsedTime / duration, 1);
-        const currentValue = Math.floor(target * progress);
+    const counterInterval = setInterval(function () {
+        currentValue += increment;
 
-        element.textContent = currentValue;
-
-        if (progress < 1) {
-            requestAnimationFrame(updateCounter);
-        } else {
+        if (currentValue >= target) {
             element.textContent = target;
+            clearInterval(counterInterval);
+        } else {
+            element.textContent = Math.floor(currentValue);
         }
-    }
-
-    requestAnimationFrame(updateCounter);
+    }, intervalTime);
 }
 
+/* Validate all contact form fields */
 function validateForm() {
     let isValid = true;
 
@@ -169,7 +139,10 @@ function validateForm() {
     const subjectError = document.getElementById("subjectError");
     const messageError = document.getElementById("messageError");
 
-    clearFormErrors(nameError, emailError, subjectError, messageError);
+    nameError.textContent = "";
+    emailError.textContent = "";
+    subjectError.textContent = "";
+    messageError.textContent = "";
 
     if (name.value.trim() === "") {
         nameError.textContent = "Please enter your name.";
@@ -179,7 +152,7 @@ function validateForm() {
     if (email.value.trim() === "") {
         emailError.textContent = "Please enter your email.";
         isValid = false;
-    } else if (!isValidEmail(email.value.trim())) {
+    } else if (email.value.indexOf("@") === -1 || email.value.indexOf(".") === -1) {
         emailError.textContent = "Please enter a valid email address.";
         isValid = false;
     }
@@ -197,36 +170,25 @@ function validateForm() {
     return isValid;
 }
 
-function clearFormErrors(...errorElements) {
-    errorElements.forEach(function (errorElement) {
-        errorElement.textContent = "";
-    });
-}
-
-function isValidEmail(email) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
+/* Handle contact form submit */
 function handleFormSubmit(event) {
     event.preventDefault();
 
-    if (!validateForm()) {
-        return;
-    }
+    const formIsValid = validateForm();
 
-    contactForm.reset();
-    contactForm.style.display = "none";
-    successMessage.style.display = "block";
+    if (formIsValid) {
+        contactForm.style.display = "none";
+        successMessage.style.display = "block";
+    }
 }
 
+/* Get user's current location using Geolocation API */
 function getUserLocation() {
     if (!navigator.geolocation) {
         locationResult.textContent = "Geolocation is not supported by this browser.";
         return;
     }
 
-    locationBtn.disabled = true;
-    locationBtn.textContent = "Detecting...";
     locationResult.textContent = "Detecting your location...";
 
     navigator.geolocation.getCurrentPosition(
@@ -234,21 +196,18 @@ function getUserLocation() {
             const latitude = position.coords.latitude.toFixed(6);
             const longitude = position.coords.longitude.toFixed(6);
 
-            locationResult.textContent = `Your current location was detected successfully. Latitude: ${latitude}, Longitude: ${longitude}`;
-            resetLocationButton();
+            locationResult.innerHTML =
+                "Your current location was detected successfully.<br>" +
+                "Latitude: " + latitude + "<br>" +
+                "Longitude: " + longitude;
         },
         function () {
             locationResult.textContent = "Unable to access location. Please allow location permission in your browser.";
-            resetLocationButton();
         }
     );
 }
 
-function resetLocationButton() {
-    locationBtn.disabled = false;
-    locationBtn.textContent = "Show My Current Location";
-}
-
+/* Highlight active navigation link while scrolling */
 function highlightActiveNav() {
     const sections = document.querySelectorAll(".section");
 
@@ -259,35 +218,27 @@ function highlightActiveNav() {
             const sectionTop = section.offsetTop - 120;
             const sectionHeight = section.offsetHeight;
 
-            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+            if (window.pageYOffset >= sectionTop && window.pageYOffset < sectionTop + sectionHeight) {
                 currentSectionId = section.getAttribute("id");
             }
         });
 
         navLinks.forEach(function (link) {
-            const isActive = link.getAttribute("href") === `#${currentSectionId}`;
+            link.classList.remove("active");
 
-            link.classList.toggle("active", isActive);
-
-            if (isActive) {
-                link.setAttribute("aria-current", "page");
-            } else {
-                link.removeAttribute("aria-current");
+            if (link.getAttribute("href") === "#" + currentSectionId) {
+                link.classList.add("active");
             }
         });
     });
 }
 
+/* Start all JavaScript features */
 smoothScroll();
 toggleHamburger();
 initTabs();
 initCounters();
 highlightActiveNav();
 
-if (contactForm) {
-    contactForm.addEventListener("submit", handleFormSubmit);
-}
-
-if (locationBtn) {
-    locationBtn.addEventListener("click", getUserLocation);
-}
+contactForm.addEventListener("submit", handleFormSubmit);
+locationBtn.addEventListener("click", getUserLocation);
