@@ -11,7 +11,6 @@ const locationResult = document.getElementById("locationResult");
 
 let countersStarted = false;
 
-/* Smooth scroll for navigation links */
 function smoothScroll() {
   navLinks.forEach(function (link) {
     link.addEventListener("click", function (event) {
@@ -35,14 +34,12 @@ function smoothScroll() {
   });
 }
 
-/* Toggle mobile navigation menu */
 function toggleHamburger() {
   hamburger.addEventListener("click", function () {
     navMenu.classList.toggle("show");
   });
 }
 
-/* Set up tab button click events */
 function initTabs() {
   tabButtons.forEach(function (button) {
     button.addEventListener("click", function () {
@@ -52,7 +49,6 @@ function initTabs() {
   });
 }
 
-/* Show selected tab and hide other tabs */
 function showTab(tabId) {
   tabButtons.forEach(function (button) {
     button.classList.remove("active");
@@ -71,7 +67,6 @@ function showTab(tabId) {
   });
 }
 
-/* Start counters when statistics section is visible */
 function initCounters() {
   const statisticsSection = document.getElementById("statistics");
 
@@ -101,7 +96,6 @@ function initCounters() {
   }
 }
 
-/* Start all animated counters */
 function startCounters() {
   counters.forEach(function (counter) {
     const target = Number(counter.getAttribute("data-target"));
@@ -109,7 +103,6 @@ function startCounters() {
   });
 }
 
-/* Animate number from 0 to target */
 function animateCounter(element, target, duration) {
   let currentValue = 0;
   const intervalTime = 20;
@@ -128,7 +121,6 @@ function animateCounter(element, target, duration) {
   }, intervalTime);
 }
 
-/* Validate all contact form fields */
 function validateForm() {
   let isValid = true;
 
@@ -176,7 +168,6 @@ function validateForm() {
   return isValid;
 }
 
-/* Handle contact form submit */
 function handleFormSubmit(event) {
   event.preventDefault();
 
@@ -188,7 +179,6 @@ function handleFormSubmit(event) {
   }
 }
 
-/* Get user's current location using Geolocation API */
 function getUserLocation() {
   if (!navigator.geolocation) {
     locationResult.textContent =
@@ -218,7 +208,6 @@ function getUserLocation() {
   );
 }
 
-/* Highlight active navigation link while scrolling */
 function highlightActiveNav() {
   const sections = document.querySelectorAll(".section");
 
